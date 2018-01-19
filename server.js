@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const pool = require('./dbpool');   //使用连接池模块获取连接
-const schedule = require('node-schedule');
-const getccplog =require('./routes/getccplog');
+const sendEmail=require('./controller/sendEmail.js'); //发送邮件工具
+const deleteLog=require('./controller/deleteLog.js'); //日志清除方法
+const schedule = require('node-schedule');//定时清除日志工具
+const getccplog =require('./routes/getccplog');//ccp接口
 const getcsplog =require('./routes/getcsplog');
 const gettmslog =require('./routes/gettmslog');
 const URL =require('url');
@@ -60,20 +62,19 @@ app.use('/log', (req, res) => {
     if (Array.isArray(logs)) {
        
         logs.forEach(log => {
-            const time = log.time;
-            const level = log.level;
+            var time = log.time;
+            var level = log.level;
            // const msgs = JSON.stringify(log.messages);
-           const msgs = JSON.stringify(log.messages);
-            const uid=log.messages[0];
-            const url = log.url;
-            const userAgent = log.agent;
-            const color = colorize(level);
+           var msgs = JSON.stringify(log.messages);
+           var uid=log.messages[0];
+           var url = log.url;
+           var userAgent = log.agent;
+           var color = colorize(level);
             console[level](`${color.start}[${time}] [${level.toUpperCase()}] [${url}] -${color.end}`, ...msgs, `用户代理: ${userAgent}`);
             //发送到数据库  
             //截取域名判断
             var hostname=URL.parse(url,false,true).hostname;
-            // console.log(hostname);
-
+             //根据域名插入不同的记录表
             switch(hostname)
             {
                 case "tms.sowl.cn":
@@ -125,113 +126,22 @@ app.use('/log', (req, res) => {
                 default:
                 console.log('域名不匹配');
             }
+
+            //error日志报警
+            sendEmail(level,hostname,time,url,msgs);
+            
         });
     }
 
     // 仅返回一个空字符串，节省带宽
     res.end('');
-
-
-// error日志邮件报警
-// if(level=="error"){
-    var hostname=URL.parse(url,false,true).hostname;
-    var nodemailer = require('nodemailer');
-    var transporter = nodemailer.createTransport({
-        //https://github.com/andris9/nodemailer-wellknown#supported-services 支持列表
-        service: 'qq',
-        port: 465, // SMTP 端口
-        secureConnection: true, // 使用 SSL
-        auth: {
-            user: '870188670@qq.com',
-            //这里密码不是qq密码，是你设置的smtp密码
-            pass: 'rcdbcfyxozrrbfdi'
-        }
-    });
-    
-    // NB! No need to recreate the transporter object. You can use
-    // the same transporter object for all e-mails
-    
-    // setup e-mail data with unicode symbols
-    var mailOptions = {
-        from: '870188670@qq.com', // 发件地址
-        to: '351230690@qq.com', // 收件列表
-        subject: hostname+"错误日志", // 标题
-        //text和html两者只支持一种
-        text: hostname+"错误日志", // 标题
-       // html: '<p>`${time}----${level}----${url}----${userAgent}----${msgs}`</p>' // html 内容
-    };
-    
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, function(error, info){
-        if(error){
-            return console.log(error);
-        }
-        console.log('Message sent: ' + info.response);
-    
-    });
-    
-// }
-
+    // }
 });
-
 app.use('/getccplog',getccplog);
 app.use('/getcsplog',getcsplog);
 app.use('/gettmslog',gettmslog);
-
-
-//定时清除日志
-var rule = new schedule.RecurrenceRule();
-var curDate=new Date().getDate();//获取当前日期【几号】
-rule.dayOfMonth = curDate;//设置每月【几号】执行任务
-
-//rule.dayOfMonth = 1;//设置每月1号执行任务
-var dellog = schedule.scheduleJob(rule, function(){
-var lastMonth = new Date(new Date().getTime() - 86400000*30).toLocaleString();
-//var lastMonth = new Date(new Date().getTime() - 100000).toLocaleString();
-console.log(lastMonth);
-pool.getConnection((err, conn)=> {
-    conn.query(
-      "DELETE FROM ccp_log_total WHERE time < ? ",
-      [lastMonth],
-      (err, result)=> {
-          if(err){
-              console.log(err);
-              return ;
-          }
-        if(result.length>0){
-            console.log('删除日志成功');
-        }
-        conn.release();
-      })
-      conn.query(
-      "DELETE FROM csp_log_total WHERE time < ? ",
-      [lastMonth],
-      (err, result)=> {
-          if(err){
-              console.log(err);
-              return ;
-          }
-        if(result.length>0){
-            console.log('删除日志成功');
-        }
-        conn.release();
-      })
-      conn.query(
-        "DELETE FROM tms_log_total WHERE time < ? ",
-        [lastMonth],
-        (err, result)=> {
-            if(err){
-                console.log(err);
-                return ;
-            }
-          if(result.length>0){
-              console.log('删除日志成功');
-          }
-          conn.release();
-        })
-  })
-});
-
+//调用定时清除日志服务
+deleteLog.delete();
 //配置接口服务
 // var server = app.listen(2017,'192.168.1.188',function () {
 
