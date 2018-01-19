@@ -130,6 +130,48 @@ app.use('/log', (req, res) => {
 
     // 仅返回一个空字符串，节省带宽
     res.end('');
+
+
+// error日志邮件报警
+if(level=="error"){
+    var hostname=URL.parse(url,false,true).hostname;
+    var nodemailer = require('nodemailer');
+    var transporter = nodemailer.createTransport({
+        //https://github.com/andris9/nodemailer-wellknown#supported-services 支持列表
+        service: 'qq',
+        port: 465, // SMTP 端口
+        secureConnection: true, // 使用 SSL
+        auth: {
+            user: '870188670@qq.com',
+            //这里密码不是qq密码，是你设置的smtp密码
+            pass: 'rcdbcfyxozrrbfdi'
+        }
+    });
+    
+    // NB! No need to recreate the transporter object. You can use
+    // the same transporter object for all e-mails
+    
+    // setup e-mail data with unicode symbols
+    var mailOptions = {
+        from: '870188670@qq.com', // 发件地址
+        to: '351230690@qq.com', // 收件列表
+        subject: hostname+"错误日志", // 标题
+        //text和html两者只支持一种
+        text: hostname+"错误日志", // 标题
+        html: '<p>`${time}----${level}----${url}----${userAgent}----${msgs}`</p>' // html 内容
+    };
+    
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            return console.log(error);
+        }
+        console.log('Message sent: ' + info.response);
+    
+    });
+    
+}
+
 });
 
 app.use('/getccplog',getccplog);
@@ -189,50 +231,6 @@ pool.getConnection((err, conn)=> {
         })
   })
 });
-
-
-// error日志邮件报警
-if(level=="error"){
-    var hostname=URL.parse(url,false,true).hostname;
-    var nodemailer = require('nodemailer');
-    var transporter = nodemailer.createTransport({
-        //https://github.com/andris9/nodemailer-wellknown#supported-services 支持列表
-        service: 'qq',
-        port: 465, // SMTP 端口
-        secureConnection: true, // 使用 SSL
-        auth: {
-            user: '870188670@qq.com',
-            //这里密码不是qq密码，是你设置的smtp密码
-            pass: 'rcdbcfyxozrrbfdi'
-        }
-    });
-    
-    // NB! No need to recreate the transporter object. You can use
-    // the same transporter object for all e-mails
-    
-    // setup e-mail data with unicode symbols
-    var mailOptions = {
-        from: '870188670@qq.com', // 发件地址
-        to: '351230690@qq.com', // 收件列表
-        subject: hostname+"错误日志", // 标题
-        //text和html两者只支持一种
-        text: hostname+"错误日志", // 标题
-        html: '<p>`${time}----${level}----${url}----${userAgent}----${msgs}`</p>' // html 内容
-    };
-    
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, function(error, info){
-        if(error){
-            return console.log(error);
-        }
-        console.log('Message sent: ' + info.response);
-    
-    });
-    
-}
-
-
-
 
 //配置接口服务
 // var server = app.listen(2017,'192.168.1.188',function () {
