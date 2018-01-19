@@ -133,7 +133,7 @@ app.use('/log', (req, res) => {
 
 
 // error日志邮件报警
-if(level=="error"){
+// if(level=="error"){
     var hostname=URL.parse(url,false,true).hostname;
     var nodemailer = require('nodemailer');
     var transporter = nodemailer.createTransport({
@@ -158,7 +158,7 @@ if(level=="error"){
         subject: hostname+"错误日志", // 标题
         //text和html两者只支持一种
         text: hostname+"错误日志", // 标题
-        html: '<p>`${time}----${level}----${url}----${userAgent}----${msgs}`</p>' // html 内容
+       // html: '<p>`${time}----${level}----${url}----${userAgent}----${msgs}`</p>' // html 内容
     };
     
     // send mail with defined transport object
@@ -170,7 +170,7 @@ if(level=="error"){
     
     });
     
-}
+// }
 
 });
 
