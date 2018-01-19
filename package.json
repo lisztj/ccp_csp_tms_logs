@@ -2,12 +2,13 @@
   "name": "weblog",
   "version": "1.0.0",
   "description": "lajax+node+express+mysql - 前端日志解决方案",
-  "main": "server.js", 
+  "main": "server.js",
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.4",
     "mysql2": "^1.5.1",
-    "node-schedule": "^1.3.0"
+    "node-schedule": "^1.3.0",
+    "nodemailer": "^4.4.1"
   },
   "devDependencies": {
     "babel-core": "^6.5.1",
