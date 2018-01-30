@@ -16,7 +16,7 @@ app.controller('myCtrl',['$scope','$http',function ($scope,$http) {
       {
         case "ccp":
         $http
-        .get('http://192.168.1.188:2017/getccplog?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e+"&skip="+skip+"&count="+count)
+        .get('http://127.0.0.1:2017/getccplog?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e+"&skip="+skip+"&count="+count)
         .success(function (data) {
           //解析服务端返回的结果
           console.log(data.data);
@@ -28,7 +28,7 @@ app.controller('myCtrl',['$scope','$http',function ($scope,$http) {
         break;
         case "tms":
         $http
-        .get('http://192.168.1.188:2017/gettmslog?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e+"&skip="+skip+"&count="+count)
+        .get('http://127.0.0.1:2017/gettmslog?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e+"&skip="+skip+"&count="+count)
         .success(function (data) {
           //解析服务端返回的结果
           console.log(data.data);
@@ -40,7 +40,7 @@ app.controller('myCtrl',['$scope','$http',function ($scope,$http) {
         break;
         case "csp":
         $http
-        .get('http://192.168.1.188:2017/getcsplog?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e+"&skip="+skip+"&count="+count)
+        .get('http://127.0.0.1:2017/getcsplog?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e+"&skip="+skip+"&count="+count)
         .success(function (data) {
           //解析服务端返回的结果
           console.log(data.data);
@@ -61,13 +61,13 @@ app.controller('myCtrl',['$scope','$http',function ($scope,$http) {
      switch($scope.programe)
      {
       case "ccp":
-      window.location.href= 'http://192.168.1.188:2017/getccplog/export?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e;
+      window.location.href= 'http://127.0.0.1:2017/getccplog/export?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e;
       break;
       case "tms":
-      window.location.href= 'http://192.168.1.188:2017/gettmslog/export?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e;
+      window.location.href= 'http://127.0.0.1:2017/gettmslog/export?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e;
       break;
       case "csp":
-      window.location.href= 'http://192.168.1.188:2017/getcsplog/export?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e;
+      window.location.href= 'http://127.0.0.1:2017/getcsplog/export?level='+l+"&keyword="+k+"&startTime="+s+"&endTime="+e;
       break;
     }
     };
