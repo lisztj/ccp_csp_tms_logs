@@ -221,17 +221,18 @@ router.get('/export',function(req,res,next){
                       }
                     if(result.length>0){ //条件查询 ，找到数据
                         var totalCount=result.length;
-                        var excel=(new Date().getTime()+".xls").toString();
+                        var excel=(new Date().getTime()+".xlsx").toString();
                         conn.query(
-                            "select * FROM tms_log_total WHERE 1=1"+str+order+ " into outfile "+"'d:/tmslog"+excel+"'", 
+                            // "select * FROM tms_log_total WHERE 1=1"+str+order+ " into outfile "+"'d:/tmslog"+excel+"'", 
+                            "select * FROM tms_log_total WHERE 1=1"+str+order, 
                             strArray,
                             (err, result)=> {
                                 if(err){
                                     console.log('err',err);
                                     return ;
                                 }
-                            console.log("select * FROM tms_log_total WHERE 1=1"+str+order+ " into outfile "+"'d:/tmslog"+excel+"'");
-                            res.download("d:/tmslog"+excel);
+                            res.xls('tms'+excel, result);
+                            // res.download("d:/tmslog"+excel);
                      
                     })
                     }else {  

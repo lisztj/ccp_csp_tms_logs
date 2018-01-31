@@ -1,6 +1,7 @@
 var express = require('express');
 const router = express.Router();
 const pool = require('../dbpool');
+const json2xls = require('json2xls');//导出excel
 router.get('/',function(req,res,next){
     var level="";
     switch(req.param('level'))
@@ -224,16 +225,18 @@ router.get('/export',function(req,res,next){
                       }
                     if(result.length>0){ //条件查询 ，找到数据
                         var totalCount=result.length;
-                        var excel=(new Date().getTime()+".xls").toString();
+                        var excel=(new Date().getTime()+".xlsx").toString();
                         conn.query(
-                            "select * FROM ccp_log_total WHERE 1=1"+str+order+ " into outfile "+"'d:/ccplog"+excel+"'", 
+                            // "select * FROM ccp_log_total WHERE 1=1"+str+order+ " into outfile "+"'./ccplog"+excel+"'", 
+                            "select * FROM ccp_log_total WHERE 1=1"+str+order, 
                             strArray,
                             (err, result)=> {
                                 if(err){
                                     console.log('err',err);
                                     return ;
                                 }
-                         res.download("d:/ccplog"+excel);
+                          res.xls('ccp'+excel, result);
+                        //  res.download("./ccplog"+excel);
                      
                     })
                     }else {  

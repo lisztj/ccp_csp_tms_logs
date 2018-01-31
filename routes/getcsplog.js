@@ -221,17 +221,18 @@ router.get('/export',function(req,res,next){
                       }
                     if(result.length>0){ //条件查询 ，找到数据
                         var totalCount=result.length;
-                        var excel=(new Date().getTime()+".xls").toString();
+                        var excel=(new Date().getTime()+".xlsx").toString();
                         conn.query(
-                            "select * FROM csp_log_total WHERE 1=1"+str+order+ " into outfile "+"'d:/csplog"+excel+"'", 
+                            // "select * FROM csp_log_total WHERE 1=1"+str+order+ " into outfile "+"'d:/csplog"+excel+"'", 
+                            "select * FROM csp_log_total WHERE 1=1"+str+order, 
                             strArray,
                             (err, result)=> {
                                 if(err){
                                     console.log('err',err);
                                     return ;
                                 }
-                            console.log("select * FROM csp_log_total WHERE 1=1"+str+order+ " into outfile "+"'d:/csplog"+excel+"'");
-                            res.download("d:/ccplog"+excel);
+                                res.xls('csp'+excel, result);
+                                // res.download("d:/ccplog"+excel);
                      
                     })
                     }else {  

@@ -5,6 +5,7 @@ const pool = require('./dbpool');   //使用连接池模块获取连接
 const sendEmail=require('./controller/sendEmail.js'); //发送邮件工具
 const deleteLog=require('./controller/deleteLog.js'); //日志清除方法
 const schedule = require('node-schedule');//定时清除日志工具
+const json2xls = require('json2xls');//导出excel
 const getccplog =require('./routes/getccplog');//ccp接口
 const getcsplog =require('./routes/getcsplog');
 const gettmslog =require('./routes/gettmslog');
@@ -137,6 +138,8 @@ app.use('/log', (req, res) => {
     res.end('');
     // }
 });
+app.use(json2xls.middleware);//导出excel中间件
+
 app.use('/getccplog',getccplog);
 app.use('/getcsplog',getcsplog);
 app.use('/gettmslog',gettmslog);
