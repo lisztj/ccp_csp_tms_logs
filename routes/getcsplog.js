@@ -93,7 +93,7 @@ var fenye=" limit "+skip+","+count;
                           console.log('err',err);
                           return ;
                       }
-                    if(result.length>0){ //条件查询 ，找到数据
+                   
                         var totalCount=result.length;
                         conn.query(
                             "SELECT * FROM csp_log_total WHERE 1=1"+str+order+fenye, 
@@ -103,6 +103,7 @@ var fenye=" limit "+skip+","+count;
                                     console.log('err',err);
                                     return ;
                                 }
+                                if(result.length>0){ //条件查询 ，找到数据
                                 res.send({
                                     status:1,
                                     data:{
@@ -112,9 +113,7 @@ var fenye=" limit "+skip+","+count;
                                     }
                             }
                         )
-                     
-                    })
-                    }else {  
+                      }else {  
                         res.send({
                             status:0,
                             data:{
@@ -124,6 +123,7 @@ var fenye=" limit "+skip+","+count;
                            
                         })
                     }
+                    })
                     conn.release();
                   })
               })
