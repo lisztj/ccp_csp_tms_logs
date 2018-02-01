@@ -80,27 +80,32 @@
            </div> -->
        </div>
 
-       <div class="table-responsive" class="table table-hover">
-          <table width="100%" border="1" cellspacing="0" cellpadding="0">
-            <tr align="center">
-                <th width="5%">索引</th>
-                <th width="5%">级别</th>
-                <th width="20%">时间</th>
-                <th width="20%">URL</th>
-                <th width="50%">日志</th>
-            </tr> 
-            <tr  ng-if="show" ng-repeat="log in list">
-                    <td>{{$index+1}}</td>
-                    <td>{{log.level}}</td>
-                    <td>{{log.time}}</td>
-                    <td>{{log.url}}</td>
-                    <td>{{log.msgs}}</td>
-            </tr> 
-            <tr ng-if="!show" align="center">
-                <td width="100%" colspan="4" >{{list}}</td>
-            </tr>
+     
+          <table class="table table-hover table-responsive table-bordered table-condensed">
+                <thead>
+                <tr align="center">
+                    <th width="5%">索引</th>
+                    <th width="5%">级别</th>
+                    <th width="20%">时间</th>
+                    <th width="20%">URL</th>
+                    <th width="50%">日志</th>
+                </tr> 
+                </thead>
+                <tbody>
+                        <tr  ng-if="show" ng-repeat="log in list">
+                                <td>{{$index+1}}</td>
+                                <td>{{log.level}}</td>
+                                <td>{{log.time}}</td>
+                                <td>{{log.url}}</td>
+                                <td>{{log.msgs}}</td>
+                        </tr> 
+                       
+                </tbody>
+                <tr ng-if="!show" align="center">
+                        <td width="100%" colspan="5" >{{list}}</td>
+                    </tr>
           </table>
-          </div>
+        
 
       <script>
       $.datetimepicker.setLocale('ch');//设置中文 
