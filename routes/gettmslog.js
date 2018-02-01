@@ -87,7 +87,8 @@ var fenye=" limit "+skip+","+count;
                     return ;
                 }
                 conn.query(
-                 "SELECT pid FROM tms_log_total", //查总数
+                    "SELECT pid FROM ccp_log_total WHERE 1=1"+str, //查总数
+                    strArray,
                   (err, result)=> {
                       if(err){
                           console.log('err',err);

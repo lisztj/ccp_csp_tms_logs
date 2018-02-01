@@ -10,13 +10,23 @@
     <script src="search.js"></script>
     <link rel="stylesheet" type="text/css" href="jquery.datetimepicker.css"/ >
     <script src="jquery.datetimepicker.full.js"></script>
+    <script src="tm.pagination.js"></script>
     <!-- bootstrap table -->
     <link rel="stylesheet" href="public/bootstrap.min.css">
     <link rel="stylesheet" href="public/bootstrap-table.min.css">
     <link rel="stylesheet" href="public/bootstrap.min.js">
     <link rel="stylesheet" href="public/bootstrap-table.min.js">
     <link rel="stylesheet" href="public/bootstrap-table-zh-CN.min.js">
-
+    <style>
+            .page-list .pagination {float:left;}
+            .page-list .pagination span {cursor: pointer;}
+            .page-list .pagination .separate span{cursor: default; border-top:none;border-bottom:none;}
+            .page-list .pagination .separate span:hover {background: none;}
+            .page-list .page-total {float:left; margin: 25px 20px;}
+            .page-list .page-total input, .page-list .page-total select{height: 26px; border: 1px solid #ddd;}
+            .page-list .page-total input {width: 40px; padding-left:3px;}
+            .page-list .page-total select {width: 50px;}
+        </style>
 </head>
 <body ng-controller="myCtrl">
     <div class="panel panel-default">
@@ -47,9 +57,6 @@
         <div class="col-sm-2">
                 <input id="endTime" type="text" name="endTime" ng-model="endTime" class="form-control" />
         </div>
-         
-          <!-- 起始索引skip<input id="skip" type="text" name="skip" ng-model="skip" /> <br>
-          一页数量count<input id="count" type="count" name="count" ng-model="count"/> <br> -->
       </form>
     </div>
     <div class="panel-body form-group" style="margin-bottom:0px;">
@@ -61,27 +68,13 @@
         </div>
         <div class="col-sm-3"> 
       <button id="btn1" ng-click="submit()" type="button" class="btn btn-primary">查询</button>
-      <button id="btn2" ng-click="export()" type="button" class="btn btn-success">导出</button>
+      <button id="btn2" ng-click="export(s,e,l,k)" type="button" class="btn btn-success">导出</button>
       </div>
     </div>
     <label class="col-sm-12 control-label" style="top:5px;">
-        <p id="total" ng-show="total">共{{total}}个数据,当前查询到{{curcount}}个数据</p>
+        <p id="total" ng-show="total">共查询{{total}}个数据,当前页{{curcount}}个数据</p>
     </label>
-    <div class="table-responsive">
-            <table id="table" class="table table-hover" data-toggle="table">
-                <!--<div class="" >暂无数据</div>-->
-            </table>
-
-        <!-- <div style="padding:10px">
-            <app-pagination 
-                [total]="total" 
-                (pageIndexChange)="pchanged($event)"
-            ></app-pagination>
-           </div> -->
-       </div>
-
-     
-          <table class="table table-hover table-responsive table-bordered table-condensed">
+             <table class="table table-hover table-responsive table-bordered table-condensed table-striped" >
                 <thead>
                 <tr align="center">
                     <th width="5%">索引</th>
@@ -106,8 +99,11 @@
                         </tr>
                 </tfoot>
           </table>
+          <div style="float:left;margin-left:70%;">
+                <tm-pagination conf="paginationConf"></tm-pagination>
+          </div>
         
-
+         
       <script>
       $.datetimepicker.setLocale('ch');//设置中文 
       $('#startTime,#endTime').datetimepicker({
