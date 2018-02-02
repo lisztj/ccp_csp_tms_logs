@@ -9,7 +9,7 @@ app.controller('myCtrl',['$scope','$http',function ($scope,$http) {
     //  currentPage: 1, //起始页
     //totalItems: 120,//总共有多少条记录
     itemsPerPage: 10, //每页展示的数量
-    //  pagesLength: 10,
+    pagesLength: 5,//页码展示长度
     perPageOptions: [10, 20, 30],
     onChange: function(){
       $scope.load();
