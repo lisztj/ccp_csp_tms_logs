@@ -12,7 +12,7 @@ var pool = mysql.createPool({
   //password: '',
   database: 'log',
   port: 3306,
-  connectionLimit: 10,    //连接池最大容量
+  connectionLimit: 80,    //连接池最大容量
   dateStrings: true  //将时间转换为字符串
 });
 
