@@ -1,4 +1,5 @@
 FROM node:6.9.5
+MAINTAINER sino "sino@vip56.cn"
 
 RUN mkdir -p /home/Service
 
